@@ -1,0 +1,9 @@
+- name: Test webhook activation
+  sources:
+    - ansible.eda.webhook: {}
+  rules:
+    - name: Always fire on any event
+      condition: true
+      action:
+        debug:
+          msg: "Received event: {{ event }}"
