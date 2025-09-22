@@ -1,4 +1,5 @@
 - name: Test webhook activation
+  hosts: localhost
   sources:
     - ansible.eda.webhook:
         host: 0.0.0.0
