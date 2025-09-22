@@ -1,0 +1,28 @@
+---
+- name: Webhook → AAP Job Template (disk full)
+  hosts: localhost
+  sources:
+    - ansible.eda.webhook:
+        # In EDA UI, you usually leave host/port empty.
+        # Keeping them here allows local testing via ansible-rulebook.
+        host: 0.0.0.0
+        port: 5000
+        token: "{{ lookup('env', 'EDA_TOKEN') | default('devtoken') }}"
+  rules:
+    - name: trigger JT when error_type == disk_full
+      condition: >
+        event.payload is defined and
+        event.payload.result is defined and
+        event.payload.result.error_type is defined and
+        event.payload.result.error_type == "disk_full"
+      action:
+        run_job_template:
+          name: "Handle Disk Full"    # <-- change to your JT name
+          organization: "Default"     # <-- change if needed
+          # Optional: pass extra vars into the JT launch
+          job_args:
+            extra_vars:
+              incident_time: "{{ event.payload.result._time | default('') }}"
+              target_host: "{{ event.payload.result.host | default('') }}"
+              percent_used: "{{ event.payload.result.percent_used | default(omit) }}"
+              source: "webhook"

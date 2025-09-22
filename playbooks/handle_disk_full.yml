@@ -1,0 +1,28 @@
+---
+- name: Handle disk full (demo remediation)
+  hosts: "{{ target_host | default('localhost') }}"
+  gather_facts: false
+  become: true
+
+  tasks:
+    - name: Show context
+      debug:
+        msg:
+          - "Incident time: {{ incident_time | default('') }}"
+          - "Target host: {{ target_host | default('localhost') }}"
+          - "Percent used: {{ percent_used | default('n/a') }}"
+
+    - name: Cleanup old logs (demo)
+      file:
+        path: /var/log/myapp/old.log
+        state: absent
+      ignore_errors: true
+
+    - name: Verify free space (demo)
+      command: df -h
+      register: dfout
+      changed_when: false
+
+    - name: Print df
+      debug:
+        var: dfout.stdout_lines

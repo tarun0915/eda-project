@@ -1,0 +1,9 @@
+{
+  "result": {
+    "_time": "2025-09-21T15:30:00Z",
+    "host": "app01.example.com",
+    "error_type": "disk_full",
+    "percent_used": 95,
+    "msg": "Filesystem /var is 95% full"
+  }
+}
