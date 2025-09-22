@@ -16,7 +16,7 @@
         event.payload.result.error_type is defined and
         event.payload.result.error_type == "disk_full"
       action:
-        run_job_template:
+        run_playbook:
           name: "Handle Disk Full"    # <-- change to your JT name
           organization: "Default"     # <-- change if needed
           # Optional: pass extra vars into the JT launch
