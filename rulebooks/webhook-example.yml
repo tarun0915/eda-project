@@ -6,7 +6,7 @@
         port: 5000
   rules:
     - name: Always fire on any event
-      condition: "event is defined"
+      condition: "event.payload is defined"
       action:
         debug:
           msg: "Received event: {{ event }}"
