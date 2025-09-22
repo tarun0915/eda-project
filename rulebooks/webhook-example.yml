@@ -10,4 +10,4 @@
       condition: "event.payload is defined"
       action:
         debug:
-          msg: "Received event: {{ event }}"
+          msg: "All is well."
