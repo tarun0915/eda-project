@@ -1,0 +1,14 @@
+export EDA_TOKEN=test
+ansible-rulebook -r rulebooks/webhook-example.yml --env-vars EDA_TOKEN -v
+
+# Valid authorization token
+curl -sS -X POST "http://44.224.14.24:5000/endpoint" \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer test" \
+  -d '{"payload":{"hello":"world"}}'
+  
+# Invalid authorization token
+curl -sS -X POST "http://44.224.14.24:5000/endpoint" \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer secrettoken" \
+  -d '{"payload":{"hello":"world"}}'
