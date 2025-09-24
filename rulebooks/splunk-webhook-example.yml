@@ -7,17 +7,17 @@
         port: 5000
         token: "{{ EDA_TOKEN | default('splunktoken') }}"
   rules:
-    - name: only ERROR/CRITICAL from my-app
+    - name: trigger JT when error_type == disk_full
       condition: >
         event.payload is defined and
-        event.payload.log_level in ["ERROR","CRITICAL"] and
-        event.payload.app == "credit" and
-        ("disk" in event.payload.msg.lower() or "full" in event.payload.msg.lower())
+        event.payload.result is defined and
+        event.payload.result.error_type is defined and
+        event.payload.result.error_type == "disk_full" 
       action:
         run_playbook:
-          name: remediation/echo.yml
+          name: playbooks/splunk_disk_full.yml
           extra_vars:
-            src_host: "{{ event.payload.host | default('unknown') }}"
-            app: "{{ event.payload.app | default('unknown') }}"
-            msg: "{{ event.payload.msg | default('') }}"
-            level: "{{ event.payload.log_level | default('') }}"
+            incident_time: "{{ event.payload.result._time | default('') }}"
+            target_host: "{{ event.payload.result.host | default('') }}"
+            percent_used: "{{ event.payload.result.percent_used | default(omit) }}"
+            source: "webhook"
