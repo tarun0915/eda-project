@@ -1,0 +1,23 @@
+---
+- name: Splunk webhook test
+  hosts: localhost
+  sources:
+    - ansible.eda.webhook:
+        host: 0.0.0.0
+        port: 5000
+        token: "{{ EDA_TOKEN | default('splunktoken') }}" t
+  rules:
+    - name: only ERROR/CRITICAL from my-app
+      condition: >
+        event.payload is defined and
+        event.payload.log_level in ["ERROR","CRITICAL"] and
+        event.payload.app == "credit" and
+        ("disk" in event.payload.msg.lower() or "full" in event.payload.msg.lower())
+      action:
+        run_playbook:
+          name: remediation/echo.yml
+          extra_vars:
+            src_host: "{{ event.payload.host | default('unknown') }}"
+            app: "{{ event.payload.app | default('unknown') }}"
+            msg: "{{ event.payload.msg | default('') }}"
+            level: "{{ event.payload.log_level | default('') }}"

@@ -1,0 +1,12 @@
+---
+- name: Echo incoming event
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Show context
+      debug:
+        msg:
+          - "host={{ src_host }}"
+          - "app={{ app }}"
+          - "level={{ level }}"
+          - "msg={{ msg }}"
