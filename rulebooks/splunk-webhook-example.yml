@@ -13,8 +13,6 @@
         event.payload.log_level == "ERROR" and 
         event.payload.msg == "disk full"
       action:
-        debug:
-          msg: "Matched: {{ event.payload }}"
         run_job_template:
           name: "Handle Disk Full"
           organization: Default
