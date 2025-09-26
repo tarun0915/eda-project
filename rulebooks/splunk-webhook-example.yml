@@ -14,8 +14,9 @@
         event.payload.result.error_type is defined and
         event.payload.result.error_type == "disk_full" 
       action:
-        run_playbook:
-          name: playbooks/splunk_disk_full.yml
+        run_job_template:
+          name: "Handle Disk Full"
+          organization: Default
           extra_vars:
             incident_time: "{{ event.payload.result._time | default('') }}"
             target_host: "{{ event.payload.result.host | default('') }}"
