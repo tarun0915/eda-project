@@ -9,5 +9,6 @@
     - name: Always fire on any event
       condition: "event.payload is defined"
       action:
-        debug:
-          msg: "All is well!"
+        run_job_template:
+          name: "Handle Disk Full"
+          organization: Default
