@@ -10,15 +10,14 @@
     - name: trigger JT when error_type == disk_full
       condition: >
         event.payload is defined and 
-        event.payload.result is defined and 
-        event.payload.result.log_level == "ERROR" and 
-        event.payload.result.msg == "disk full"
+        event.payload.log_level == "ERROR" and 
+        event.payload.msg == "disk full"
       action:
         run_job_template:
           name: "Handle Disk Full"
           organization: Default
           extra_vars:
           # incident_time: "{{ event.payload.result._time | default('') }}"
-            target_host: "{{ event.payload.result.host | default('') }}"
+            target_host: "{{ event.payload.host | default('') }}"
           # percent_used: "{{ event.payload.result.percent_used | default(omit) }}"
             source: "webhook"
