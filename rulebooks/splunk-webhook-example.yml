@@ -13,7 +13,7 @@
         event.payload.log_level is defined and
         event.payload.msg is defined and
         event.payload.log_level == "ERROR" and 
-        event.payload.msg == "disk full" and
+        event.payload.msg == "disk full"
       action:
         run_job_template:
           name: "Handle Disk Full"
