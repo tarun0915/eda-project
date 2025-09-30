@@ -16,8 +16,9 @@
         run_job_template:
           name: "Handle Disk Full"
           organization: Default
-          extra_vars:
-          # incident_time: "{{ event.payload._time | default('') }}"
-            target_host: "{{ event.payload.host | default('') }}"
-            percent_used: "{{ event.payload.percent_used | default(omit) }}"
-            source: "webhook"
+          job_args:
+            extra_vars:
+            # incident_time: "{{ event.payload._time | default('') }}"
+              target_host: "{{ event.payload.host | default('') }}"
+              percent_used: "{{ event.payload.percent_used | default(omit) }}"
+              source: "webhook"

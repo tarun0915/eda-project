@@ -28,17 +28,19 @@
         event.payload.message is defined and
         'disk full' in event.payload.message
       action:
-        debug:
-          msg: >
-            MATCH ✓ host={{ event.payload.host | default('unknown') }},
-            percent_used={{ event.payload.percent_used | default('n/a') }},
-            message="{{ event.payload.message | default('') }}"
+      #  debug:
+      #    msg: >
+      #      MATCH ✓ host={{ event.payload.host | default('unknown') }},
+      #      percent_used={{ event.payload.percent_used | default('n/a') }},
+      #      message="{{ event.payload.message | default('') }}"
         run_job_template:
           name: "Handle Disk Full"
           organization: Default
-          extra_vars:
-          # incident_time: "{{ event.payload._time | default('') }}"
-            target_host: "{{ event.payload.host | default('') }}"
-            percent_used: "{{ event.payload.percent_used | default(omit) }}"
-            source: "webhook"
+          job_args:
+            extra_vars:
+            # incident_time: "{{ event.payload._time | default('') }}"
+              target_host: "{{ event.payload.host | default('') }}"
+              percent_used: "{{ event.payload.percent_used | default(omit) }}"
+              message: "{{ event.payload.message | default(omit) }}"
+              source: "webhook"
 
