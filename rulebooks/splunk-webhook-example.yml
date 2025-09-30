@@ -5,7 +5,7 @@
     - ansible.eda.webhook:
         host: 0.0.0.0
         port: 5002
-        token: "{{ EDA_CONTROLLER_TOKEN | default('splunktoken') }}"
+        token: "{{ EDA_TOKEN | default('splunktoken') }}"
   rules:
     - name: trigger JT when error_type == disk_full
       condition: >
