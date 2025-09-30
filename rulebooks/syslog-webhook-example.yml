@@ -25,13 +25,8 @@
     - name: trigger on disk full or percent_used >= 90
       condition: >
         event.payload is defined and
-        (
-          (event.payload.message is defined and
-           'disk full' in (event.payload.message | lower))
-          or
-          (event.payload.percent_used is defined and
-           (event.payload.percent_used | int) >= 90)
-        )
+        event.payload.message is defined and
+        'disk full' in event.payload.message
       action:
         debug:
           msg: >
