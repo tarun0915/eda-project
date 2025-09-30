@@ -33,11 +33,12 @@
             MATCH ✓ host={{ event.payload.host | default('unknown') }},
             percent_used={{ event.payload.percent_used | default('n/a') }},
             message="{{ event.payload.message | default('') }}"
-        # To actually run remediation, uncomment and set your JT name/org:
-        # run_job_template:
-        #   name: "Handle Disk Full"
-        #   organization: "Default"
-        #   extra_vars:
-        #     source: "webhook"
-        #     target_host: "{{ event.payload.host | default('') }}"
+        run_job_template:
+          name: "Handle Disk Full"
+          organization: Default
+          extra_vars:
+          # incident_time: "{{ event.payload._time | default('') }}"
+            target_host: "{{ event.payload.host | default('') }}"
+            percent_used: "{{ event.payload.percent_used | default(omit) }}"
+            source: "webhook"
 
