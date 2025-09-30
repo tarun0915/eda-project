@@ -1,0 +1,48 @@
+---
+- name: Syslog → EDA demo (webhook)
+  hosts: localhost
+
+  sources:
+    - ansible.eda.webhook:
+        host: 0.0.0.0
+        port: 5003
+        token: "{{ EDA_TOKEN | default('splunktoken') }}"
+
+  rules:
+    # Show every incoming event so you can verify end-to-end quickly
+    - name: print any incoming event
+      condition: event.payload is defined
+      action:
+        debug:
+          msg: |
+            EDA received:
+            time={{ event.payload.time | default('') }}
+            host={{ event.payload.host | default('') }}
+            message={{ event.payload.message | default('') }}
+            percent_used={{ event.payload.percent_used | default('') }}
+
+    # Fire when the criteria are met
+    - name: trigger on disk full or percent_used >= 90
+      condition: >
+        event.payload is defined and
+        (
+          (event.payload.message is defined and
+           'disk full' in (event.payload.message | lower))
+          or
+          (event.payload.percent_used is defined and
+           (event.payload.percent_used | int) >= 90)
+        )
+      action:
+        debug:
+          msg: >
+            MATCH ✓ host={{ event.payload.host | default('unknown') }},
+            percent_used={{ event.payload.percent_used | default('n/a') }},
+            message="{{ event.payload.message | default('') }}"
+        # To actually run remediation, uncomment and set your JT name/org:
+        # run_job_template:
+        #   name: "Handle Disk Full"
+        #   organization: "Default"
+        #   extra_vars:
+        #     source: "webhook"
+        #     target_host: "{{ event.payload.host | default('') }}"
+
